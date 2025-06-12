@@ -1,0 +1,205 @@
+[
+    {
+        "id": "4e6d8d1cfb77c0be",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5ea8e67006360b6e",
+        "type": "serial in",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "serial": "e73cd80befa97a88",
+        "x": 250,
+        "y": 480,
+        "wires": [
+            [
+                "7228448d43dbae1c"
+            ]
+        ]
+    },
+    {
+        "id": "9a6c850e3a0b01df",
+        "type": "http in",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "url": "serial",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 240,
+        "y": 380,
+        "wires": [
+            [
+                "6213fb156bae1568"
+            ]
+        ]
+    },
+    {
+        "id": "6213fb156bae1568",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "getControlador",
+        "func": "msg.payload = global.get(\"JSON\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 380,
+        "wires": [
+            [
+                "1bae67cac1a78b72"
+            ]
+        ]
+    },
+    {
+        "id": "e6a478640747c9d2",
+        "type": "debug",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "7228448d43dbae1c",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "setControlador",
+        "func": "global.set(\"Controlador\", msg.payload);\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 480,
+        "wires": [
+            [
+                "e6a478640747c9d2",
+                "f8198a89de4ca629"
+            ]
+        ]
+    },
+    {
+        "id": "1bae67cac1a78b72",
+        "type": "http response",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 750,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "0bd99d6327f83e03",
+        "type": "debug",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "f8198a89de4ca629",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "splitSerial",
+        "func": "\nmsg.payload = msg.payload.split(\",\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 560,
+        "wires": [
+            [
+                "0bd99d6327f83e03",
+                "4ee4e317489df685"
+            ]
+        ]
+    },
+    {
+        "id": "fc633ed5aa0ba809",
+        "type": "debug",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "4ee4e317489df685",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "jsonSerial",
+        "func": "let array = msg.payload;\nlet dict = {};\n\narray.forEach(item => {\n    let [key, value] = item.split(\":\");\n    dict[key] = parseFloat(value); // Si quieres que los valores sean números, usa: dict[key] = Number(value);\n});\nmsg.payload = dict;\nglobal.set(\"JSON\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 660,
+        "wires": [
+            [
+                "fc633ed5aa0ba809"
+            ]
+        ]
+    },
+    {
+        "id": "e73cd80befa97a88",
+        "type": "serial-port",
+        "name": "Controlador",
+        "serialport": "COM7",
+        "serialbaud": "115200",
+        "databits": 8,
+        "parity": "none",
+        "stopbits": 1,
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": 10000
+    }
+]

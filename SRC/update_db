@@ -1,0 +1,89 @@
+#%%
+import requests
+import psycopg2
+import time
+from datetime import datetime
+
+# Configuración de la conexión a PostgreSQL
+DB_CONFIG = {
+    'host': 'localhost',
+    'port': 5432,
+    'database': 'Valente_DB',
+    'user': 'postgres',
+    'password': 'dbz13feb'
+}
+
+API_URL = "http://127.0.0.1:1880/serial"  # Cambia por la URL real
+
+def leer_api():
+    try:
+        response = requests.get(API_URL)
+        response.raise_for_status()
+        data = response.json()
+        data["Proximidad"] = bool(data["Proximidad"])
+        # Ajusta según la estructura de la API
+        return data
+    except Exception as e:
+        print(f"Error al leer la API: {e}")
+        return None
+    
+
+def crear_tabla():
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE monitoreo (
+            id SERIAL PRIMARY KEY,
+            Proximidad BOOL,
+            Distancia REAL,
+            Sonido INTEGER,
+            Humedad INTEGER,
+            Temperatura INTEGER,
+            Fuego INTEGER,
+            luz INTEGER,
+            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except:
+        pass
+def guardar_dato(valor):
+    conn = psycopg2.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        INSERT INTO monitoreo (
+            Proximidad, Distancia, Sonido, Humedad,
+            Temperatura, Fuego, luz
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """, (
+        valor['Proximidad'],
+        valor['Distancia'],
+        valor['Sonido'],
+        valor['Humedad'],
+        valor['Temperatura'],
+        valor['fuego'],
+        valor['luz']
+    ))
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+def main():
+    crear_tabla()
+    while True:
+        valor = leer_api()
+        if valor is not None:
+            guardar_dato(valor)
+            print(f"Guardado valor: {valor}")
+        else:
+            print("No se guardó ningún dato esta vez.")
+        time.sleep(300)  # 300 segundos o cada 5 minutos
+
+if __name__ == "__main__":
+    main()
