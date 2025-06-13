@@ -1,0 +1,594 @@
+[
+    {
+        "id": "4e6d8d1cfb77c0be",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5ea8e67006360b6e",
+        "type": "serial in",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "serial": "e73cd80befa97a88",
+        "x": 170,
+        "y": 200,
+        "wires": [
+            [
+                "7228448d43dbae1c"
+            ]
+        ]
+    },
+    {
+        "id": "9a6c850e3a0b01df",
+        "type": "http in",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "url": "serial",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 240,
+        "y": 500,
+        "wires": [
+            [
+                "6213fb156bae1568"
+            ]
+        ]
+    },
+    {
+        "id": "6213fb156bae1568",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "getControlador",
+        "func": "msg.payload = global.get(\"JSON\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 500,
+        "wires": [
+            [
+                "1bae67cac1a78b72"
+            ]
+        ]
+    },
+    {
+        "id": "e6a478640747c9d2",
+        "type": "debug",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "7228448d43dbae1c",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "setControlador",
+        "func": "global.set(\"Controlador\", msg.payload);\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 200,
+        "wires": [
+            [
+                "e6a478640747c9d2",
+                "f8198a89de4ca629"
+            ]
+        ]
+    },
+    {
+        "id": "1bae67cac1a78b72",
+        "type": "http response",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "0bd99d6327f83e03",
+        "type": "debug",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "f8198a89de4ca629",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "splitSerial",
+        "func": "\nmsg.payload = msg.payload.split(\",\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 280,
+        "wires": [
+            [
+                "0bd99d6327f83e03",
+                "4ee4e317489df685"
+            ]
+        ]
+    },
+    {
+        "id": "fc633ed5aa0ba809",
+        "type": "debug",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1140,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "4ee4e317489df685",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "jsonSerial",
+        "func": "let array = msg.payload;\nlet dict = {};\n\narray.forEach(item => {\n    let [key, value] = item.split(\":\");\n    dict[key] = parseFloat(value); // Si quieres que los valores sean números, usa: dict[key] = Number(value);\n});\nmsg.payload = dict;\nglobal.set(\"JSON\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 380,
+        "wires": [
+            [
+                "fc633ed5aa0ba809",
+                "f9b46d6438e50530",
+                "371f73c7a0b450e8",
+                "31a5c9f1efee5ca1",
+                "6a170f954bd7bfbe",
+                "7d9227422465fc1e",
+                "4c768e2b8b5d7430"
+            ]
+        ]
+    },
+    {
+        "id": "f9b46d6438e50530",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "Humedad",
+        "func": "\nmsg.payload = msg.payload[\"Humedad\"];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 480,
+        "wires": [
+            [
+                "2fc88cf16660979d"
+            ]
+        ]
+    },
+    {
+        "id": "2fc88cf16660979d",
+        "type": "ui_gauge",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "group": "eb55f12084fc5642",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "Humedad (%)",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1380,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "212a7ec05a91edd2",
+        "type": "db insert",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "InsertarDB",
+        "database": "ecd5a66847eb959b",
+        "table": "",
+        "conflict": "raise",
+        "x": 1170,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "371f73c7a0b450e8",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "Temperatura",
+        "func": "\nmsg.payload = msg.payload[\"Temperatura\"];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 540,
+        "wires": [
+            [
+                "93eb7091fe4b8d3f"
+            ]
+        ]
+    },
+    {
+        "id": "93eb7091fe4b8d3f",
+        "type": "ui_gauge",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "group": "eb55f12084fc5642",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperatura",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1370,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "31a5c9f1efee5ca1",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "Distancia",
+        "func": "\nmsg.payload = msg.payload[\"Distancia\"];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 600,
+        "wires": [
+            [
+                "8d246bf7b9a05614"
+            ]
+        ]
+    },
+    {
+        "id": "8d246bf7b9a05614",
+        "type": "ui_gauge",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "group": "0c46ef6d1f52452a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "compass",
+        "title": "Distancia",
+        "label": "cm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1360,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "6a170f954bd7bfbe",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "Proximidad",
+        "func": "\nmsg.payload = msg.payload[\"Proximidad\"];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 660,
+        "wires": [
+            [
+                "b3bf375def144937"
+            ]
+        ]
+    },
+    {
+        "id": "8909bdedd49638bd",
+        "type": "ui_text",
+        "z": "4e6d8d1cfb77c0be",
+        "group": "0c46ef6d1f52452a",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Proximidad",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1490,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "7d9227422465fc1e",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "luz",
+        "func": "\nmsg.payload = msg.payload[\"luz\"];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 740,
+        "wires": [
+            [
+                "dfcfc73e94086690"
+            ]
+        ]
+    },
+    {
+        "id": "dfcfc73e94086690",
+        "type": "ui_gauge",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "",
+        "group": "83158c305116b4ab",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "donut",
+        "title": "Iluminación",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1023",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1370,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "4c768e2b8b5d7430",
+        "type": "function",
+        "z": "4e6d8d1cfb77c0be",
+        "name": "Sonido",
+        "func": "\nmsg.payload = msg.payload[\"Sonido\"];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 800,
+        "wires": [
+            [
+                "6e08490f4e12fef7"
+            ]
+        ]
+    },
+    {
+        "id": "b3bf375def144937",
+        "type": "ui_template",
+        "z": "4e6d8d1cfb77c0be",
+        "group": "eb55f12084fc5642",
+        "name": "",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1280,
+        "y": 660,
+        "wires": [
+            [
+                "8909bdedd49638bd"
+            ]
+        ]
+    },
+    {
+        "id": "6e08490f4e12fef7",
+        "type": "ui_artlessgauge2",
+        "z": "4e6d8d1cfb77c0be",
+        "group": "83158c305116b4ab",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "icon": "volume_up",
+        "label": "Sensor de sonido",
+        "unit": "",
+        "layout": "linear",
+        "decimals": 0,
+        "differential": false,
+        "minmax": false,
+        "colorTrack": "#555555",
+        "style": "",
+        "colorFromTheme": true,
+        "property": "payload",
+        "secondary": "secondary",
+        "inline": false,
+        "animate": true,
+        "log2": false,
+        "sectors": [
+            {
+                "val": 0,
+                "col": "#ff9900",
+                "t": "min",
+                "dot": 0
+            },
+            {
+                "val": 1023,
+                "col": "#ff9900",
+                "t": "max",
+                "dot": 0
+            }
+        ],
+        "lineWidth": 3,
+        "bgcolorFromTheme": true,
+        "diffCenter": "",
+        "x": 1380,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "e73cd80befa97a88",
+        "type": "serial-port",
+        "name": "Controlador",
+        "serialport": "COM5",
+        "serialbaud": "115200",
+        "databits": 8,
+        "parity": "none",
+        "stopbits": 1,
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": 10000
+    },
+    {
+        "id": "eb55f12084fc5642",
+        "type": "ui_group",
+        "name": "Tiempo",
+        "tab": "f879e6e59f4a565c",
+        "order": 2,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ecd5a66847eb959b",
+        "type": "db-config",
+        "client": "pg",
+        "host": "localhost",
+        "port": "5432",
+        "dbname": "Valente_DB",
+        "name": "DB"
+    },
+    {
+        "id": "0c46ef6d1f52452a",
+        "type": "ui_group",
+        "name": "Detección",
+        "tab": "f879e6e59f4a565c",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "83158c305116b4ab",
+        "type": "ui_group",
+        "name": "Auxiliares",
+        "tab": "f879e6e59f4a565c",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f879e6e59f4a565c",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
